@@ -20,6 +20,7 @@ namespace API_Project.Models
         public string imdbID { get; set; }
         public string Type { get; set; }
         public string Poster { get; set; }
+        public string UserId { get; set; }
     }
 
 }
