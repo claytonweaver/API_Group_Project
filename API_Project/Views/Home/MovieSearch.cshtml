@@ -1,0 +1,13 @@
+﻿@model MovieSearch
+@{
+    ViewData["Title"] = "MovieSearch";
+}
+
+<h1>MovieSearch</h1>
+
+@foreach(var m in Model.Search)
+{
+    <p href="../Home/MovieDetails?id=@m.imdbID">@m.Title</p>
+    <p>@m.Year</p>
+}
+
