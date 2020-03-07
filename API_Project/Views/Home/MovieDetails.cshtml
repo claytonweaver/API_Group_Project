@@ -1,0 +1,29 @@
+﻿@model MovieDetails
+@{
+    ViewData["Title"] = "MovieDetails";
+}
+
+<h1>MovieDetails</h1>
+
+<table class="table-bordered">
+    <tr>
+        <th>Title</th>
+        <td>@Model.Title</td>
+    </tr>
+    <tr>
+        <th>Year</th>
+        <td>@Model.Year</td>
+    </tr>
+    <tr>
+        <th>Plot</th>
+        <td>@Model.Plot</td>
+    </tr>
+    <tr>
+        <th>Runtime</th>
+        <td>@Model.Runtime</td>
+    </tr>
+    <tr>
+        <th>Metacritic</th>
+        <td>@Model.Metascore</td>
+    </tr>
+</table>

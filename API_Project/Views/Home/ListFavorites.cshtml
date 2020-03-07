@@ -13,7 +13,7 @@
     @foreach(FavoriteMovies movie in Model)
     {
         <tr>
-            <td>@movie.Title</td>
+            <td><a href="../Home/MovieDetails?id=@movie.MovieId">@movie.Title</a></td>
             <td>@movie.MovieYear</td>
         </tr>
     }
