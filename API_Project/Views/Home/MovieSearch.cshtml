@@ -1,13 +1,23 @@
-﻿@model MovieSearch
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+
+@inject UserManager<IdentityUser> UserManager
+@model MovieSearch
 @{
     ViewData["Title"] = "MovieSearch";
 }
 
 <h1>MovieSearch</h1>
 
-@foreach(var m in Model.Search)
+@foreach (var m in Model.Search)
 {
     <p href="../Home/MovieDetails?id=@m.imdbID">@m.Title</p>
     <p>@m.Year</p>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <a class="btn btn-outline-dark" href="../Home/AddToFavorites?id=@m.imdbID">Add to Favorites</a>
+    }
 }
+
 

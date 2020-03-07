@@ -5,3 +5,16 @@
 
 <h1>ListFavorites</h1>
 
+<table class="table-bordered">
+    <tr>
+        <th>Title</th>
+        <th>Year</th>
+    </tr>
+    @foreach(FavoriteMovies movie in Model)
+    {
+        <tr>
+            <td>@movie.Title</td>
+            <td>@movie.MovieYear</td>
+        </tr>
+    }
+</table>

@@ -49,7 +49,7 @@ namespace API_Project.Controllers
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri("http://www.omdbapi.com");
 
-                var response = await client.GetAsync($"?apikey={apiKey}&s={title}");
+                var response = await client.GetAsync($"?apikey={apiKey}&s={title}&y={year}");
 
                 var results = await response.Content.ReadAsAsync<MovieSearch>();
 
@@ -69,11 +69,39 @@ namespace API_Project.Controllers
 
         }
 
+        public async Task<IActionResult> AddToFavorites(string Id)
+        {
+            string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri("http://www.omdbapi.com");
+            var response = await client.GetAsync($"?apikey={apiKey}&i={Id}");
+
+
+
+            var movie = await response.Content.ReadAsAsync<MovieDetails>();
+
+
+
+            int movieYear = int.Parse(movie.Year);
+
+            FavoriteMovies finalMovie = new FavoriteMovies(movie.Title, movieYear, movie.imdbID, 50);
+
+            finalMovie.UserId = id;
+
+            _context.FavoriteMovies.Add(finalMovie);
+            _context.SaveChanges();
+
+
+            return RedirectToAction("ListFavorites");
+
+        }
+
         public IActionResult ListFavorites()
         {
             string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            List<FavoriteMovies> userfavorites = _context.FavoriteMovies.Where(x => x.UserId == id).ToList();
-            return View(userfavorites);
+            List<FavoriteMovies> movies = _context.FavoriteMovies.Where(x => x.UserId == id).ToList();
+            return View(movies);
         }
 
 
