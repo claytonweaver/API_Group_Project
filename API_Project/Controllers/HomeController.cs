@@ -14,14 +14,13 @@ namespace API_Project.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly string apiKey;
-
         private readonly MovieDbContext _context;
+
+        private readonly string apiKey;
         public HomeController(IConfiguration configuration, MovieDbContext context)
         {
             apiKey = configuration.GetSection("APIKeys")["APIMovieKey"];
             _context = context;
-
         }
 
         public IActionResult Index()
@@ -29,12 +28,12 @@ namespace API_Project.Controllers
             return View();
         }
 
+        
 
-
-
+        
         public async Task<IActionResult> MovieSearch(string title, string year)
         {
-            if (year == null)
+            if(year == null)
             {
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri("http://www.omdbapi.com");
@@ -58,14 +57,29 @@ namespace API_Project.Controllers
             }
         }
 
+        public async Task<IActionResult> MovieDetails(string id)
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri("http://www.omdbapi.com");
 
+            var response = await client.GetAsync($"?apikey={apiKey}&i={id}");
+            var results = await response.Content.ReadAsAsync<MovieDetails>();
+
+            return View(results);
+
+        }
+
+<<<<<<< HEAD
         public async Task<IActionResult> AddToFavorites(string movieId)
+=======
+        public async Task<IActionResult> AddToFavorites(string Id)
+>>>>>>> 358ca06c7b2f6099a336ce681740e6a359a72885
         {
             string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri("http://www.omdbapi.com");
-            var response = await client.GetAsync($"?apikey={apiKey}&i={movieId}");
+            var response = await client.GetAsync($"?apikey={apiKey}&i={Id}");
 
 
 
@@ -87,17 +101,19 @@ namespace API_Project.Controllers
 
         }
 
-
-
         public IActionResult ListFavorites()
         {
             string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             List<FavoriteMovies> movies = _context.FavoriteMovies.Where(x => x.UserId == id).ToList();
-
             return View(movies);
         }
 
 
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
 
 
 
@@ -108,3 +124,10 @@ namespace API_Project.Controllers
         }
     }
 }
+
+
+
+
+
+
+

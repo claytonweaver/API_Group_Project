@@ -5,6 +5,7 @@
 
 <h1>ListFavorites</h1>
 
+<<<<<<< HEAD
 <table class="table table-bordered table-hover">
     <tr>
         <th class="bg-primary text-light">Movie</th>
@@ -20,3 +21,18 @@
     }
 </table>
 
+=======
+<table class="table-bordered">
+    <tr>
+        <th>Title</th>
+        <th>Year</th>
+    </tr>
+    @foreach(FavoriteMovies movie in Model)
+    {
+        <tr>
+            <td><a href="../Home/MovieDetails?id=@movie.MovieId">@movie.Title</a></td>
+            <td>@movie.MovieYear</td>
+        </tr>
+    }
+</table>
+>>>>>>> 358ca06c7b2f6099a336ce681740e6a359a72885
