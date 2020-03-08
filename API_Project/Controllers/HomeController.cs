@@ -59,7 +59,7 @@ namespace API_Project.Controllers
         }
 
 
-        public async Task<IActionResult> AddToFavorites(string movieId, string year)
+        public async Task<IActionResult> AddToFavorites(string movieId)
         {
             string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 

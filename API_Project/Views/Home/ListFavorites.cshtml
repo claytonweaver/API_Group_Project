@@ -1,0 +1,22 @@
+﻿@model List<FavoriteMovies>
+@{
+    ViewData["Title"] = "ListFavorites";
+}
+
+<h1>ListFavorites</h1>
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th class="bg-primary text-light">Movie</th>
+        <th class="bg-primary text-light">Year</th>
+        
+    </tr>
+    @foreach(var m in Model)
+    {
+        <tr>
+            <td>@m.Title</td>
+            <td>@m.MovieYear</td>
+        </tr>
+    }
+</table>
+

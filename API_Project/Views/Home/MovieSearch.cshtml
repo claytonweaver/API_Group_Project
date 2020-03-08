@@ -7,7 +7,9 @@
 
 @foreach(var m in Model.Search)
 {
-    <p href="../Home/MovieDetails?id=@m.imdbID">@m.Title</p>
+    <p>@m.Title</p>
     <p>@m.Year</p>
+    <button onclick="window.location.href='../Home/AddToFavorites?movieId=@m.imdbID'">Add To Favorites</button>
 }
 
+                                                                                                                                                                                                 
