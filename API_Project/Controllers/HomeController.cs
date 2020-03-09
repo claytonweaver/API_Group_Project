@@ -103,6 +103,20 @@ namespace API_Project.Controllers
             List<FavoriteMovies> movies = _context.FavoriteMovies.Where(x => x.UserId == id).ToList();
             return View(movies);
         }
+        
+        public IActionResult DeleteFavorite(int id)
+        {
+
+            FavoriteMovies favMovie = _context.FavoriteMovies.Find(id);
+
+            if (favMovie != null)
+            {
+                _context.Remove(favMovie);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("ListFavorites");
+
+        }
 
 
 
