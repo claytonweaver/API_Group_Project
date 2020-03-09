@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -17,9 +17,11 @@ namespace API_Project.Controllers
         private readonly MovieDbContext _context;
 
         private readonly string apiKey;
+        private readonly string youtubeKey;
         public HomeController(IConfiguration configuration, MovieDbContext context)
         {
             apiKey = configuration.GetSection("APIKeys")["APIMovieKey"];
+            youtubeKey = configuration.GetSection("APIKeys")["YouTubeKey"];
             _context = context;
         }
 
@@ -130,9 +132,22 @@ namespace API_Project.Controllers
             return RedirectToAction("ListFavorites");
         }
 
+        public async Task<IActionResult> MovieTrailer(string title, string year)
+        {
+            
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri("https://www.googleapis.com");
+
+                var response = await client.GetAsync($"youtube/v3/search?part=snippet&maxResults=10&q={title}%2B{year}%2Btrailer&key={youtubeKey}");
+
+            var results = await response.Content.ReadAsAsync<Rootobject>();
+            string videoTag = results.items[0].id.videoId;
+            
+                return View("MovieTrailer",videoTag);
+            
+        }
 
 
-        
 
 
 
