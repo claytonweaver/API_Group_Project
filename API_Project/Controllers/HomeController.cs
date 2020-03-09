@@ -88,14 +88,15 @@ namespace API_Project.Controllers
             FavoriteMovies finalMovie = new FavoriteMovies(movie.Title, movieYear, movie.imdbID, 50);
 
             finalMovie.UserId = id;
-            //validation to avoid duplicates on fav list
+           //validation to avoid duplicates on fav list
             List<FavoriteMovies> movies = _context.FavoriteMovies.Where(x => x.UserId == id).ToList();
+            TempData["exists"] = false;
             foreach(FavoriteMovies favs in movies)
             {
                 if(favs.MovieId == finalMovie.MovieId)
                 {
-                    ViewBag.AlreadyExists = true;
-                    return RedirectToAction("ListFavorites", new { ViewBag.AlreadyExists });
+                    TempData["exists"] = true;
+                    return RedirectToAction("ListFavorites");
                 }
             }
 
@@ -109,6 +110,7 @@ namespace API_Project.Controllers
 
         public IActionResult ListFavorites()
         {
+            TempData.Keep("exists");
             string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             List<FavoriteMovies> movies = _context.FavoriteMovies.Where(x => x.UserId == id).ToList();
             return View(movies);
