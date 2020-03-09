@@ -88,6 +88,16 @@ namespace API_Project.Controllers
             FavoriteMovies finalMovie = new FavoriteMovies(movie.Title, movieYear, movie.imdbID, 50);
 
             finalMovie.UserId = id;
+            //validation to avoid duplicates on fav list
+            List<FavoriteMovies> movies = _context.FavoriteMovies.Where(x => x.UserId == id).ToList();
+            foreach(FavoriteMovies favs in movies)
+            {
+                if(favs.MovieId == finalMovie.MovieId)
+                {
+                    ViewBag.AlreadyExists = true;
+                    return RedirectToAction("ListFavorites", new { ViewBag.AlreadyExists });
+                }
+            }
 
             _context.FavoriteMovies.Add(finalMovie);
             _context.SaveChanges();
