@@ -6,7 +6,13 @@
 
 
 }
+@if (ViewBag.AlreadyExists)
+{
+    <div class="alert alert-danger" role="alert">
+        <strong>Oh snap!</strong> This is already on your Favorites List.
+    </div>
 
+}
 <h1>ListFavorites</h1>
 
 <table class="table table-striped">
