@@ -1,4 +1,4 @@
-<body class=" bg-dark">
+
 
     @model MovieDetails
     @{
@@ -7,10 +7,13 @@
 
     <h1 class="text-white">Media Details</h1>
 
+
+
     <div class="container">
         <div class="flex-column">
             @{
                 
+
                 if (@Model.Poster != "N/A")
                 {
                     <img src="@Model.Poster" class="rounded" /><br />
@@ -22,7 +25,6 @@
 
             }
         </div><br />
-        
               <div class="flex-column">
                   <table class="table table-dark">
                       <tr>
@@ -45,8 +47,8 @@
                           <th>Metacritic</th>
                           @{
 
-                              bool hasScore = true;
-                              if (!hasScore)
+
+                              if (Model.Metascore != "N/A")
                               {
                                   string criticScore = @Model.Metascore;
                                   int score = int.Parse(criticScore);
@@ -62,14 +64,13 @@
                               }
                               else
                               {
-
+                   
+                                      <td>N/A</td>
+                                  
                               }
-                          }
 
+                          }
                       </tr>
                   </table>
               </div>
         </div>
-        
-    
-</body>
