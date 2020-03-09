@@ -1,0 +1,23 @@
+﻿<body class=" bg-dark">
+
+    @model List<FavoriteMovies>
+    @{
+        ViewData["Title"] = "ListFavorites";
+    }
+
+    <h1 class="text-white">ListFavorites</h1>
+
+    <table class="table table-dark">
+        <tr>
+            <th>Title</th>
+            <th>Year</th>
+        </tr>
+        @foreach (FavoriteMovies movie in Model)
+        {
+            <tr>
+                <td><a href="../Home/MovieDetails?id=@movie.MovieId">@movie.Title</a></td>
+                <td>@movie.MovieYear</td>
+            </tr>
+        }
+    </table>
+</body>

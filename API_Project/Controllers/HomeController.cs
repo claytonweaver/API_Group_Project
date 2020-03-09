@@ -14,97 +14,111 @@ namespace API_Project.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly string apiKey;
+       
+        
+            private readonly MovieDbContext _context;
 
-        private readonly MovieDbContext _context;
-        public HomeController(IConfiguration configuration, MovieDbContext context)
-        {
-            apiKey = configuration.GetSection("APIKeys")["APIMovieKey"];
-            _context = context;
+            private readonly string apiKey;
+            public HomeController(IConfiguration configuration, MovieDbContext context)
+            {
+                apiKey = configuration.GetSection("APIKeys")["APIMovieKey"];
+                _context = context;
+            }
 
-        }
-
-        public IActionResult Index()
-        {
-            return View();
-        }
-
+            public IActionResult Index()
+            {
+                return View();
+            }
 
 
 
-        public async Task<IActionResult> MovieSearch(string title, string year)
-        {
-            if (year == null)
+
+            public async Task<IActionResult> MovieSearch(string title, string year)
+            {
+                if (year == null)
+                {
+                    HttpClient client = new HttpClient();
+                    client.BaseAddress = new Uri("http://www.omdbapi.com");
+
+                    var response = await client.GetAsync($"?apikey={apiKey}&s={title}");
+
+                    var results = await response.Content.ReadAsAsync<MovieSearch>();
+
+                    return View(results);
+                }
+                else
+                {
+                    HttpClient client = new HttpClient();
+                    client.BaseAddress = new Uri("http://www.omdbapi.com");
+
+                    var response = await client.GetAsync($"?apikey={apiKey}&s={title}&y={year}");
+
+                    var results = await response.Content.ReadAsAsync<MovieSearch>();
+
+                    return View(results);
+                }
+            }
+
+            public async Task<IActionResult> MovieDetails(string id)
             {
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri("http://www.omdbapi.com");
 
-                var response = await client.GetAsync($"?apikey={apiKey}&s={title}");
-
-                var results = await response.Content.ReadAsAsync<MovieSearch>();
+                var response = await client.GetAsync($"?apikey={apiKey}&i={id}");
+                var results = await response.Content.ReadAsAsync<MovieDetails>();
 
                 return View(results);
+
             }
-            else
+
+            public async Task<IActionResult> AddToFavorites(string Id)
             {
+                string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri("http://www.omdbapi.com");
+                var response = await client.GetAsync($"?apikey={apiKey}&i={Id}");
 
-                var response = await client.GetAsync($"?apikey={apiKey}&s={title}&y={year}");
 
-                var results = await response.Content.ReadAsAsync<MovieSearch>();
 
-                return View(results);
+                var movie = await response.Content.ReadAsAsync<MovieDetails>();
+
+
+
+                int movieYear = int.Parse(movie.Year);
+
+                FavoriteMovies finalMovie = new FavoriteMovies(movie.Title, movieYear, movie.imdbID, 50);
+
+                finalMovie.UserId = id;
+
+                _context.FavoriteMovies.Add(finalMovie);
+                _context.SaveChanges();
+
+
+                return RedirectToAction("ListFavorites");
+
             }
-        }
 
-
-        public async Task<IActionResult> AddToFavorites(string movieId, string year)
-        {
-            string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("http://www.omdbapi.com");
-            var response = await client.GetAsync($"?apikey={apiKey}&i={movieId}");
+            public IActionResult ListFavorites()
+            {
+                string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                List<FavoriteMovies> movies = _context.FavoriteMovies.Where(x => x.UserId == id).ToList();
+                return View(movies);
+            }
 
 
 
-            var movie = await response.Content.ReadAsAsync<MovieDetails>();
+            public IActionResult Privacy()
+            {
+                return View();
+            }
 
 
 
-            int movieYear = int.Parse(movie.Year);
-
-            FavoriteMovies finalMovie = new FavoriteMovies(movie.Title, movieYear, movie.imdbID, 50);
-
-            finalMovie.UserId = id;
-
-            _context.FavoriteMovies.Add(finalMovie);
-            _context.SaveChanges();
-
-
-            return RedirectToAction("ListFavorites");
-
-        }
-
-
-
-        public IActionResult ListFavorites()
-        {
-            string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            List<FavoriteMovies> movies = _context.FavoriteMovies.Where(x => x.UserId == id).ToList();
-
-            return View(movies);
-        }
-
-
-
-
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+            public IActionResult Error()
+            {
+                return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            }
         }
     }
-}
