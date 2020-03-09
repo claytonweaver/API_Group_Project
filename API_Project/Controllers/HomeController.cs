@@ -132,20 +132,7 @@ namespace API_Project.Controllers
 
 
 
-        public async Task<IActionResult> GetMovieTrailer(string imdbId)
-        {
-           
-                HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("http://www.omdbapi.com");
-
-                var response = await client.GetAsync($"?apikey={apiKey}&s={title}");
-
-                var results = await response.Content.ReadAsAsync<MovieSearch>();
-
-                return View(results);
-            
-            
-        }
+        
 
 
 
