@@ -104,18 +104,18 @@ namespace API_Project.Controllers
             return View(movies);
         }
         
-        public IActionResult DeleteFavorite(int id)
+        [HttpPost]
+        public IActionResult EditFavorite(FavoriteMovies editFavorite)
         {
-
-            FavoriteMovies favMovie = _context.FavoriteMovies.Find(id);
-
-            if (favMovie != null)
+            FavoriteMovies originFav = _context.FavoriteMovies.Find(editFavorite.Id);
+            if (ModelState.IsValid)
             {
-                _context.Remove(favMovie);
+                originFav.UserRating = editFavorite.UserRating;
+                _context.Entry(originFav).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Update(originFav);
                 _context.SaveChanges();
             }
             return RedirectToAction("ListFavorites");
-
         }
 
 
