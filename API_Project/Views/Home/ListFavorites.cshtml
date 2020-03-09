@@ -6,7 +6,7 @@
 
 
 }
-@if (ViewBag.AlreadyExists)
+@if (TempData["exists"] is true)
 {
     <div class="alert alert-danger" role="alert">
         <strong>Oh snap!</strong> This is already on your Favorites List.
