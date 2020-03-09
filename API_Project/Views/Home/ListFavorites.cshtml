@@ -1,20 +1,32 @@
-﻿@model List<FavoriteMovies>
+@model List<FavoriteMovies>
 @{
     ViewData["Title"] = "ListFavorites";
+
+    
+
+
 }
 
 <h1>ListFavorites</h1>
 
-<table class="table-bordered">
-    <tr>
+<table class="table table-striped">
+    <tr class="bg-secondary text-light">
         <th>Title</th>
         <th>Year</th>
+        <th>User Rating</th>
+        <th>Edit</th>
+        <th>Delete</th>
     </tr>
-    @foreach(FavoriteMovies movie in Model)
+    @foreach (FavoriteMovies movie in Model)
     {
-        <tr>
-            <td><a href="../Home/MovieDetails?id=@movie.MovieId">@movie.Title</a></td>
-            <td>@movie.MovieYear</td>
-        </tr>
+        
+            <tr>
+                <td><a href="../Home/MovieDetails?id=@movie.MovieId">@movie.Title</a></td>
+                <td>@movie.MovieYear</td>
+                <td><form><label>User Rating<input type="range" name="userRating" value="@movie.UserRating" id="ageInputId" min="0" max="100" oninput="ageOutputId.value = ageInputId.value"></label><output name="ageOutputName" id="ageOutputId">@movie.UserRating</output><span>/100</span> <input type="submit" value="submit" /></form></td>
+                <td><button class="btn btn-dark btn-outline-danger" onclick="window.location.href='../Home/DeleteFavorite?id=@movie.Id'">🗑️</button></td>
+            </tr>
+        
     }
 </table>
+
